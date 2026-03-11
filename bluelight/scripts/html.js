@@ -44,6 +44,27 @@ function html_onload() {
     fileElem.click();
   }
 
+  window.loadDicomFile = function (file) {
+    var reader = new FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.url = URL.createObjectURL(file);
+    ImageManager.NumOfPreLoadSops += 1;
+    reader.onloadend = function () {
+      var Sop = loadDicomDataSet(reader.result);
+      if (Sop) {
+        Sop.Image.url = reader.url;
+        setAllSeriesCount();
+        ImageManager.preLoadSops.push({
+          dataSet: Sop.dataSet, image: Sop.Image, Sop: Sop,
+          SeriesInstanceUID: Sop.Image.SeriesInstanceUID,
+          Index: Sop.Image.NumberOfFrames | Sop.Image.InstanceNumber
+        });
+      }
+      ImageManager.NumOfPreLoadSops -= 1;
+      if (ImageManager.NumOfPreLoadSops == 0) ImageManager.loadPreLoadSops();
+    };
+  };
+
   //點到其他地方時，關閉抽屜
   getByid("container").addEventListener("mousedown", hideAllDrawer, false);
 
