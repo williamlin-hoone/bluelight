@@ -1,5 +1,5 @@
 //Viewport的總數量
-const Viewport_Total = 16;
+const Viewport_Total = 1;
 //Viewport的即時數量
 let Viewport_row = 1;
 let Viewport_col = 1;

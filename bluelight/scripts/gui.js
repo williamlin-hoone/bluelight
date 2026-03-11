@@ -153,6 +153,7 @@ class LeftLayout {
 
     setImg2Left(QRLevel, patientID) {
         var pic = getByid("LeftPicture");
+        if (!pic) return;
         var Patient_div = createElem("DIV", null, "OutLeftImg");
         //Patient_div.id = "OutLeftImg" + patientID;
         Patient_div.PatientId = patientID;

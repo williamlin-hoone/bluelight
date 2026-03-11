@@ -269,7 +269,7 @@ function html_onload() {
       getClass("labelRB")[viewportNumber].innerText = "";
       PatientMark = [];
       ImageManager = new BlueLightImageManager()
-      getByid("LeftPicture").innerHTML = "";
+      if (getByid("LeftPicture")) getByid("LeftPicture").innerHTML = "";
 
       for (var i = 0; i < Viewport_Total; i++) {
         GetViewport(i).clear();

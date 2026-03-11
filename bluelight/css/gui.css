@@ -102,19 +102,13 @@ html {
 }
 
 .page {
-  width: calc(100% - var(--leftImagePadding) - var(--bordersize) * 1 - var(--leftScrollSize)*var(--ishaveLeftScroll));
-  left: calc(var(--leftImagePadding) + var(--bordersize) * 1 + var(--leftScrollSize)*var(--ishaveLeftScroll));
+  width: 100%;
+  left: 0;
   height: 100%;
   position: relative;
   overflow: hidden;
   /* display: flex;
    overflow-y: hidden;*/
-}
-
-#LeftPicture {
-  width: calc(var(--leftImagePadding) + var(--leftScrollSize)*var(--ishaveLeftScroll));
-  height: 100%;
-  overflow-y: auto;
 }
 
 select,
@@ -240,13 +234,6 @@ button:hover {
 
 
 /*=====*/
-
-#LeftPicture {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  z-index: 9;
-}
 
 .filpx {
   transform: scaleX(-1);
