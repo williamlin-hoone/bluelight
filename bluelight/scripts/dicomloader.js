@@ -1,15 +1,31 @@
 
 function loadSopFromDataSet(dataSet, type) {
-    var imageObj = getDefaultImageObj(dataSet, type);
-    if (type == 'pdf') setPDF(imageObj);
-    if (type == 'ecg') setECG(imageObj);
-    if (type == 'sr') imageObj.sr = {/*setSR*/ };
+    try {
+        var ErrorStudy = dataSet.string(Tag.StudyInstanceUID);
+        var ErrorSeries = dataSet.string(Tag.SeriesInstanceUID);
+        var ErrorSop = dataSet.string(Tag.SOPInstanceUID);
+        if (!ErrorSop || !ErrorSeries || !ErrorStudy) {
+            ErrorMessage.pushErrorMessage(410);
+            throw "!ErrorSop || !ErrorSeries || !ErrorStudy";
+        }
+    } catch (ex) {
+        ErrorMessage.pushErrorMessage(411)
+    }
+    try {
+        var imageObj = getDefaultImageObj(dataSet, type);
+        if (type == 'pdf') setPDF(imageObj);
+        if (type == 'ecg') setECG(imageObj);
+        if (type == 'sr') imageObj.sr = {/*setSR*/ };
 
-    var Sop = ImageManager.pushStudy(imageObj); //註冊此Image至Viewer
-    if (!Sop) return;
-    Sop.type = type;
-    readDicomOverlay(dataSet, PatientMark);
-    return Sop;
+        var Sop = ImageManager.pushStudy(imageObj); //註冊此Image至Viewer
+        if (!Sop) return;
+        Sop.type = type;
+        readDicomOverlay(dataSet, PatientMark);
+        return Sop;
+    } catch (ex) {
+        if (!imageObj) ErrorMessage.pushErrorMessage(420, sop = ErrorSop, series = ErrorSeries, study = ErrorStudy);
+        else ErrorMessage.pushErrorMessage(450, sop, series, study);
+    }
 }
 
 function setPDF(imageObj) {
@@ -198,7 +214,11 @@ function getPixelDataFromDataSet(imageObj, dataSet, frameIndex = 0) {
         }
     }
     function YBR(imageObj, dataSet, pixelData) {
-        if ((imageObj.isYCbCr || dataSet.string('x00280004') === 'YBR_FULL_422' || dataSet.string('x00280004') === 'YBR_FULL') && imageObj.color) {
+        var photometric = dataSet.string('x00280004');
+        // PhotometricInterpretation=RGB 時，即使 JPEG 解碼器標記了 isYCbCr，也不應再做轉換
+        // 因為 JPEG codec 解碼時已將 YCbCr 轉回 RGB，isYCbCr 此時為誤判
+        if ((imageObj.isYCbCr && photometric !== 'RGB') || photometric === 'YBR_FULL_422' || photometric === 'YBR_FULL') {
+            if (!imageObj.color) return pixelData;
             for (var i = 0; i < pixelData.length; i += 3) {
                 var R = pixelData[i] + 1.402 * (pixelData[i + 2] - 128);
                 var G = pixelData[i] - 0.344136 * (pixelData[i + 1] - 128) - 0.714136 * (pixelData[i + 2] - 128);

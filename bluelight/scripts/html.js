@@ -36,7 +36,10 @@ function html_onload() {
               });
             }
             ImageManager.NumOfPreLoadSops -= 1;
-            if (ImageManager.NumOfPreLoadSops == 0) ImageManager.loadPreLoadSops();
+            if (ImageManager.NumOfPreLoadSops == 0) {
+              ImageManager.loadPreLoadSops();
+              setTimeout(loadRestImageData, 1000);
+            }
           }
         }
       }
@@ -124,7 +127,10 @@ function html_onload() {
               });
             }
             ImageManager.NumOfPreLoadSops -= 1;
-            if (ImageManager.NumOfPreLoadSops == 0) ImageManager.loadPreLoadSops();
+            if (ImageManager.NumOfPreLoadSops == 0) {
+              ImageManager.loadPreLoadSops();
+              setTimeout(loadRestImageData, 1000);
+            }
           }
         }
       });

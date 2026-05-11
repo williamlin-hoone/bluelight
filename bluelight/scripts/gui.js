@@ -238,7 +238,7 @@ class LeftLayout {
         if (!series_div) return;
 
         if (image.NumberOfFrames > 1) series_div.series_label.innerText = htmlEntities("" + image.NumberOfFrames);
-        else if (image.haveSameInstanceNumber) series_div.series_label.innerText = "";
+        else if (image.pdf || image.ecg || image.haveSameInstanceNumber) series_div.series_label.innerText = "";
         else series_div.series_label.innerText = "" + htmlEntities(ImageManager.findSeries(image.SeriesInstanceUID).Sop.length);
     }
 
@@ -334,6 +334,28 @@ function displayLeftCanvas(DicomCanvas, image, pixelData) {
             ctx.drawImage(SR_img, 0, 0, DicomCanvas.width, DicomCanvas.height);
         }
         SR_img.src = "../image/icon/black/b_SR.png";
+    }
+    else if (image.pdf) {
+        var PDF_img = new Image();
+        PDF_img.onload = function () {
+            DicomCanvas.width = PDF_img.width;
+            DicomCanvas.height = PDF_img.height
+            DicomCanvas.style.width = DicomCanvas.style.height = "100%";
+            var ctx = DicomCanvas.getContext("2d");
+            ctx.drawImage(PDF_img, 0, 0, DicomCanvas.width, DicomCanvas.height);
+        }
+        PDF_img.src = "../image/icon/black/pdf.png";
+    }
+    else if (image.ecg) {
+        var ECG_img = new Image();
+        ECG_img.onload = function () {
+            DicomCanvas.width = ECG_img.width;
+            DicomCanvas.height = ECG_img.height
+            DicomCanvas.style.width = DicomCanvas.style.height = "100%";
+            var ctx = DicomCanvas.getContext("2d");
+            ctx.drawImage(ECG_img, 0, 0, DicomCanvas.width, DicomCanvas.height);
+        }
+        ECG_img.src = "../image/icon/black/ecg.png";
     }
     else {
         var ctx = DicomCanvas.getContext("2d");

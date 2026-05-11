@@ -417,6 +417,8 @@ button:hover {
   height: 100%;
   width: 100%;
   image-rendering: pixelated;*/
+  object-fit: contain;
+  object-position: center;
 }
 
 #ECGOptionsDIV {
